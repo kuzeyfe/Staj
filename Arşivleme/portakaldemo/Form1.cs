@@ -15,15 +15,12 @@ namespace portakaldemo
 {
     public partial class Form1 : Form
     {
-        DateTime Degis1;
-        DateTime Degis2;
         static string pathA = secili;
         static string pathB = hedef;
         FileCompare myFileCompare = new FileCompare();
         IEnumerable<System.IO.FileInfo> list1;
         IEnumerable<System.IO.FileInfo> list2;
         bool kıyasla;
-
 
 
         public Form1()
@@ -47,7 +44,6 @@ namespace portakaldemo
             MessageBox.Show("Portakal Yazılım A.Ş.");
 
         }
-
         private void Form1_DoubleClick(object sender, EventArgs e)
         {
             if (this.WindowState != FormWindowState.Minimized)
@@ -77,11 +73,8 @@ namespace portakaldemo
         {
             //icon
             MyIcon.Icon = new Icon(@"C:\Users\Turkoglu\Desktop\Portakal\123.ico");
-            Degis1 = File.GetCreationTime(secili);
-            Degis2 = File.GetCreationTime(hedef);
- 
-        }
 
+        }
 
         static string secili = "";
         private string gercek;
@@ -97,7 +90,7 @@ namespace portakaldemo
 
         static string hedef = "";
         private string yedek;
- 
+
         private void button3_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog Klasor = new FolderBrowserDialog();
@@ -126,14 +119,14 @@ namespace portakaldemo
         private void timer1_Tick(object sender, EventArgs e)
         {
             timer1.Interval = 3000;
-            timer1.Enabled = true;
+            timer1.Enabled = false;
             timer1.Start();
             System.IO.DirectoryInfo dir1 = new System.IO.DirectoryInfo(secili);
             System.IO.DirectoryInfo dir2 = new System.IO.DirectoryInfo(hedef);
             list1 = dir1.GetFiles("*.*", System.IO.SearchOption.AllDirectories);
             list2 = dir2.GetFiles("*.*", System.IO.SearchOption.AllDirectories);
             kıyasla = list1.SequenceEqual(list2, myFileCompare);
-            if ( kıyasla != true )
+            if (kıyasla != true)
             {
                 this.CopyAll(new DirectoryInfo(secili), new DirectoryInfo(hedef));
 
@@ -147,13 +140,12 @@ namespace portakaldemo
                   //string appendText = "This is extra text" + Environment.NewLine;
                     File.AppendAllText(dir, "portakaldemo.zip dosyası:" + DateTime.Now.ToString() + ": " + "tarihinde oluşturulmuştur.\n");
                 }
-            }
-            if (Degis1 != Degis2)
-            {
-                System.IO.File.Delete(hedef);
+               
             }
 
         }
+
+
         private void CopyAll(DirectoryInfo oOriginal, DirectoryInfo oFinal)
         {
             foreach (DirectoryInfo oFolder in oOriginal.GetDirectories())

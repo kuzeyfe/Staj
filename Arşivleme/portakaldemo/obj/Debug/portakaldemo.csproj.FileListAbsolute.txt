@@ -8,3 +8,13 @@ C:\Users\Turkoglu\source\repos\portakaldemo\portakaldemo\obj\Debug\portakaldemo.
 C:\Users\Turkoglu\source\repos\portakaldemo\portakaldemo\obj\Debug\portakaldemo.csproj.CoreCompileInputs.cache
 C:\Users\Turkoglu\source\repos\portakaldemo\portakaldemo\obj\Debug\portakaldemo.exe
 C:\Users\Turkoglu\source\repos\portakaldemo\portakaldemo\obj\Debug\portakaldemo.pdb
+C:\Users\Turkoglu\Desktop\vs\Staj\Arşivleme\portakaldemo\bin\Debug\portakaldemo.exe.config
+C:\Users\Turkoglu\Desktop\vs\Staj\Arşivleme\portakaldemo\bin\Debug\portakaldemo.exe
+C:\Users\Turkoglu\Desktop\vs\Staj\Arşivleme\portakaldemo\bin\Debug\portakaldemo.pdb
+C:\Users\Turkoglu\Desktop\vs\Staj\Arşivleme\portakaldemo\obj\Debug\portakaldemo.csprojAssemblyReference.cache
+C:\Users\Turkoglu\Desktop\vs\Staj\Arşivleme\portakaldemo\obj\Debug\portakaldemo.Form1.resources
+C:\Users\Turkoglu\Desktop\vs\Staj\Arşivleme\portakaldemo\obj\Debug\portakaldemo.Properties.Resources.resources
+C:\Users\Turkoglu\Desktop\vs\Staj\Arşivleme\portakaldemo\obj\Debug\portakaldemo.csproj.GenerateResource.cache
+C:\Users\Turkoglu\Desktop\vs\Staj\Arşivleme\portakaldemo\obj\Debug\portakaldemo.csproj.CoreCompileInputs.cache
+C:\Users\Turkoglu\Desktop\vs\Staj\Arşivleme\portakaldemo\obj\Debug\portakaldemo.exe
+C:\Users\Turkoglu\Desktop\vs\Staj\Arşivleme\portakaldemo\obj\Debug\portakaldemo.pdb
