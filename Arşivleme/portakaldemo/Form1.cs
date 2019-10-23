@@ -131,6 +131,7 @@ namespace portakaldemo
                 this.CopyAll(new DirectoryInfo(secili), new DirectoryInfo(hedef));
 
                 if (!File.Exists(dir))
+
                 {
                     //string createText = "Hello and Welcome" + Environment.NewLine;
                     File.WriteAllText(dir, "Log Kayıtları Oluşturuldu. Eski Kayıt Yok!! \n");
