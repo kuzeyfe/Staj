@@ -22,7 +22,6 @@ namespace portakaldemo
         IEnumerable<System.IO.FileInfo> list2;
         bool kıyasla;
 
-
         public Form1()
         {
             InitializeComponent();
@@ -32,11 +31,11 @@ namespace portakaldemo
         string dir = @"C:\Users\Turkoglu\Desktop\log.txt";
         private void button1_Click(object sender, EventArgs e)
         {
-
-            string kaynak_klasor = gercek;
-            string hedef_klasor = yedek;
-            string hedef_dosya_yolu;
-
+            MessageBox.Show("Önce Renk, Sonra Yazı Tipi Seçiniz");
+            colorDialog1.ShowDialog();
+            Settings1.Default.Renk = colorDialog1.Color;
+            fontDialog1.ShowDialog();
+            Settings1.Default.Font = fontDialog1.Font;
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -145,7 +144,6 @@ namespace portakaldemo
             }
 
         }
-
 
         private void CopyAll(DirectoryInfo oOriginal, DirectoryInfo oFinal)
         {

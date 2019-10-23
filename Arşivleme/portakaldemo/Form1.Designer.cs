@@ -38,16 +38,20 @@
             this.button5 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.fontDialog1 = new System.Windows.Forms.FontDialog();
             this.SuspendLayout();
             // 
             // button1
             // 
+            this.button1.BackColor = System.Drawing.Color.Gainsboro;
+            this.button1.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.button1.Location = new System.Drawing.Point(12, 132);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(108, 54);
             this.button1.TabIndex = 0;
-            this.button1.Text = "Kopyala";
-            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Text = "Ayarlar";
+            this.button1.UseVisualStyleBackColor = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // button2
@@ -120,7 +124,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.OrangeRed;
+            this.BackColor = global::portakaldemo.Settings1.Default.Renk;
             this.ClientSize = new System.Drawing.Size(410, 336);
             this.Controls.Add(this.button6);
             this.Controls.Add(this.button5);
@@ -129,6 +133,8 @@
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
+            this.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::portakaldemo.Settings1.Default, "Renk", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::portakaldemo.Settings1.Default, "Font", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -149,6 +155,8 @@
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.ColorDialog colorDialog1;
+        private System.Windows.Forms.FontDialog fontDialog1;
     }
 }
 
