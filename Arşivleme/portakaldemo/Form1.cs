@@ -129,9 +129,9 @@ namespace portakaldemo
             kıyasla = list1.SequenceEqual(list2, myFileCompare);
             if (kıyasla != true)
             {
+                Array.ForEach(Directory.GetFiles(hedef), File.Delete);
                 MyIcon.ShowBalloonTip(1, "Uyarı", "Yeni bir değişiklik var!", ToolTipIcon.Info);
                 this.CopyAll(new DirectoryInfo(secili), new DirectoryInfo(hedef));
-
                 if (!File.Exists(loglar))
 
                 {
