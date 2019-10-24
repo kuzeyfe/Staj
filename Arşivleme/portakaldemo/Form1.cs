@@ -28,14 +28,15 @@ namespace portakaldemo
         }
         NotifyIcon MyIcon = new NotifyIcon();
 
-        string dir = @"C:\Users\Turkoglu\Desktop\log.txt";
+        string loglar = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\loglar.txt";
         private void button1_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Önce Renk, Sonra Yazı Tipi Seçiniz");
-            colorDialog1.ShowDialog();
-            Settings1.Default.Renk = colorDialog1.Color;
-            fontDialog1.ShowDialog();
-            Settings1.Default.Font = fontDialog1.Font;
+            ColorDialog Renk = new ColorDialog();
+            Renk.ShowDialog();
+            FontDialog Font = new FontDialog();
+            Font.ShowDialog();
+
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -72,6 +73,7 @@ namespace portakaldemo
         {
             //icon
             MyIcon.Icon = new Icon(@"C:\Users\Turkoglu\Desktop\Portakal\123.ico");
+            MessageBox.Show("Programı Çalıştırmadan Önce Yedeklemek İstediğiniz Dosyayı Ve Yedekleme Yerinizi Seçiniz!");
 
         }
 
@@ -127,20 +129,21 @@ namespace portakaldemo
             kıyasla = list1.SequenceEqual(list2, myFileCompare);
             if (kıyasla != true)
             {
+                MyIcon.ShowBalloonTip(1, "Uyarı", "Yeni bir değişiklik var!", ToolTipIcon.Info);
                 this.CopyAll(new DirectoryInfo(secili), new DirectoryInfo(hedef));
 
-                if (!File.Exists(dir))
+                if (!File.Exists(loglar))
 
                 {
                     //string createText = "Hello and Welcome" + Environment.NewLine;
-                    File.WriteAllText(dir, "Log Kayıtları Oluşturuldu. Eski Kayıt Yok!! \n");
+                    File.WriteAllText(loglar, "Log Kayıtları Oluşturuldu. Eski Kayıt Yok!! \n");
                 }
                 else
                 { // This text is always added, making the file longer over time
                   //string appendText = "This is extra text" + Environment.NewLine;
-                    File.AppendAllText(dir, "portakaldemo.zip dosyası:" + DateTime.Now.ToString() + ": " + "tarihinde oluşturulmuştur.\n");
+                    File.AppendAllText(loglar, "portakaldemo.zip dosyası:" + DateTime.Now.ToString() + ": " + "tarihinde oluşturulmuştur.\n");
                 }
-               
+                
             }
 
         }
@@ -168,7 +171,6 @@ namespace portakaldemo
                 return s.GetHashCode();
             }
         }
-
 
     }
 }
