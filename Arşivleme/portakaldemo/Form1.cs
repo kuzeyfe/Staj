@@ -106,7 +106,7 @@ namespace portakaldemo
 
         private void button5_Click(object sender, EventArgs e)
         {
-            timer1.Interval = 3000;
+            timer1.Interval = 5000;
             timer1.Enabled = true;
             timer1.Start();
             MessageBox.Show("Timer Çalışıyor");
@@ -119,7 +119,7 @@ namespace portakaldemo
         }
         private void timer1_Tick(object sender, EventArgs e)
         {
-            timer1.Interval = 3000;
+            timer1.Interval = 5000;
             timer1.Enabled = false;
             timer1.Start();
             System.IO.DirectoryInfo dir1 = new System.IO.DirectoryInfo(secili);
@@ -129,7 +129,7 @@ namespace portakaldemo
             kıyasla = list1.SequenceEqual(list2, myFileCompare);
             if (kıyasla != true)
             {
-                Array.ForEach(Directory.GetFiles(hedef), File.Delete);
+                Array.ForEach(Directory.GetFiles(hedef, "*.*", SearchOption.AllDirectories), File.Delete);
                 MyIcon.ShowBalloonTip(1, "Uyarı", "Yeni bir değişiklik var!", ToolTipIcon.Info);
                 this.CopyAll(new DirectoryInfo(secili), new DirectoryInfo(hedef));
                 if (!File.Exists(loglar))
