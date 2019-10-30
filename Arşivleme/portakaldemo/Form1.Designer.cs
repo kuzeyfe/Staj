@@ -124,7 +124,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.BackColor = global::portakaldemo.Properties.Settings.Default.Renk;
             this.ClientSize = new System.Drawing.Size(410, 336);
             this.Controls.Add(this.button6);
             this.Controls.Add(this.button5);
@@ -133,6 +133,9 @@
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
+            this.DataBindings.Add(new System.Windows.Forms.Binding("BackColor", global::portakaldemo.Properties.Settings.Default, "Renk", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::portakaldemo.Properties.Settings.Default, "Font", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.Font = global::portakaldemo.Properties.Settings.Default.Font;
             this.Name = "Form1";
             this.Text = "Portakal Yazılım";
             this.Load += new System.EventHandler(this.Form1_Load);

@@ -32,10 +32,12 @@ namespace portakaldemo
         private void button1_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Önce Renk, Sonra Yazı Tipi Seçiniz");
-            ColorDialog Renk = new ColorDialog();
-            Renk.ShowDialog();
-            FontDialog Font = new FontDialog();
-            Font.ShowDialog();
+            ColorDialog renk = new ColorDialog();
+            renk.ShowDialog();
+            BackColor = renk.Color;
+            FontDialog fontum = new FontDialog();
+            fontum.ShowDialog();
+            Font = fontum.Font;
 
         }
 
