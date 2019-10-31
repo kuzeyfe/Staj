@@ -15,6 +15,7 @@ namespace portakaldemo
 {
     public partial class Form1 : Form
     {
+        NotifyIcon MyIcon = new NotifyIcon();
         static string pathA = secili;
         static string pathB = hedef;
         FileCompare myFileCompare = new FileCompare();
@@ -26,9 +27,8 @@ namespace portakaldemo
         {
             InitializeComponent();
         }
-        NotifyIcon MyIcon = new NotifyIcon();
 
-        string loglar = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\loglar.txt";
+        static string loglar = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\loglar.txt";
         private void button1_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Önce Renk, Sonra Yazı Tipi Seçiniz");
@@ -124,30 +124,73 @@ namespace portakaldemo
             timer1.Interval = 5000;
             timer1.Enabled = false;
             timer1.Start();
-            System.IO.DirectoryInfo dir1 = new System.IO.DirectoryInfo(secili);
-            System.IO.DirectoryInfo dir2 = new System.IO.DirectoryInfo(hedef);
-            list1 = dir1.GetFiles("*.*", System.IO.SearchOption.AllDirectories);
-            list2 = dir2.GetFiles("*.*", System.IO.SearchOption.AllDirectories);
-            kıyasla = list1.SequenceEqual(list2, myFileCompare);
-            if (kıyasla != true)
-            {
-                Array.ForEach(Directory.GetFiles(hedef, "*.*", SearchOption.AllDirectories), File.Delete);
-                MyIcon.ShowBalloonTip(1, "Uyarı", "Yeni bir değişiklik var!", ToolTipIcon.Info);
-                this.CopyAll(new DirectoryInfo(secili), new DirectoryInfo(hedef));
-                if (!File.Exists(loglar))
+            FileSystemWatcher degisim = new FileSystemWatcher();
+            degisim.Path = secili;
+            degisim.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
+            degisim.Filter = "*.*";
+            //System.IO.DirectoryInfo dir1 = new System.IO.DirectoryInfo(secili);
+            //System.IO.DirectoryInfo dir2 = new System.IO.DirectoryInfo(hedef);
+            //list1 = dir1.GetFiles("*.*", System.IO.SearchOption.AllDirectories);
+            //list2 = dir2.GetFiles("*.*", System.IO.SearchOption.AllDirectories);
+            degisim.Changed += degisim_Changed;
+            degisim.Created += degisim_Created;
+            degisim.Deleted += degisim_Deleted;
+            degisim.Renamed += degisim_Renamed;
+            // Begin watching.
+            degisim.IncludeSubdirectories = true;
+            degisim.EnableRaisingEvents = true;
+            //kıyasla = list1.SequenceEqual(list2, myFileCompare);
 
-                {
-                    //string createText = "Hello and Welcome" + Environment.NewLine;
-                    File.WriteAllText(loglar, "Log Kayıtları Oluşturuldu. Eski Kayıt Yok!! \n");
-                }
-                else
-                { // This text is always added, making the file longer over time
-                  //string appendText = "This is extra text" + Environment.NewLine;
-                    File.AppendAllText(loglar, "portakaldemo.zip dosyası:" + DateTime.Now.ToString() + ": " + "tarihinde oluşturulmuştur.\n");
-                }
+            //if (kıyasla != true)
+            if (degisim.EnableRaisingEvents!=true)
+            {
+                //Array.ForEach(Directory.GetFiles(hedef, "*.*", SearchOption.AllDirectories), File.Delete);
+                this.CopyAll(new DirectoryInfo(secili), new DirectoryInfo(hedef));
+                //if (!File.Exists(loglar))
+
+                //{
+                //    //string createText = "Hello and Welcome" + Environment.NewLine;
+                //    File.WriteAllText(loglar, "Log Kayıtları Oluşturuldu. Eski Kayıt Yok!! \n");
+                //}
+                //else
+                //{ // This text is always added, making the file longer over time
+                //  //string appendText = "This is extra text" + Environment.NewLine;
+                //    File.AppendAllText(loglar, "portakaldemo.zip dosyası:" + DateTime.Now.ToString() + ": " + "tarihinde oluşturulmuştur.\n");
+                //}
                 
             }
 
+        }
+
+        private void degisim_Renamed(object sender, RenamedEventArgs e)
+        {
+            File.AppendAllText(loglar, $"{e.Name} - dosyası:" + DateTime.Now.ToString() + ": " + "tarihinde adı değişti.\n");
+            File.AppendText(loglar).Close();
+            MyIcon.ShowBalloonTip(1, "Uyarı", $"{e.Name} dosyasının adı değişti!", ToolTipIcon.Info);
+            File.Copy(Path.Combine(secili, e.Name), Path.Combine(hedef, e.Name), true);
+        }
+
+        private void degisim_Deleted(object sender, FileSystemEventArgs e)
+        {
+            File.AppendAllText(loglar, $"{e.Name} - dosyası:" + DateTime.Now.ToString() + ": " + "tarihinde silindi.\n");
+            File.AppendText(loglar).Close();
+            MyIcon.ShowBalloonTip(1, "Uyarıl", $"{e.Name} dosysı silindi!", ToolTipIcon.Info);
+        }
+
+        private void degisim_Changed(object sender, FileSystemEventArgs e)
+        {
+            File.AppendAllText(loglar, $"{e.Name} - dosyası:" + DateTime.Now.ToString() + ": " + "tarihinde değişti.\n");
+            File.AppendText(loglar).Close();
+            MyIcon.ShowBalloonTip(1, "Uyarı", $"{e.Name} dosyasında yeni bir değişiklik var!", ToolTipIcon.Info);
+            File.Copy(Path.Combine(secili, e.Name), Path.Combine(hedef, e.Name), true);
+        }
+
+        private void degisim_Created(object sender, FileSystemEventArgs e)
+        {
+            File.AppendAllText(loglar, $"{e.Name} - dosyası:" + DateTime.Now.ToString() + ": " + "tarihinde oluşturuldu.\n");
+            File.AppendText(loglar).Close();
+            MyIcon.ShowBalloonTip(1, "Uyarı", $"{e.Name} adında bir dosya oluştu!", ToolTipIcon.Info);
+            File.Copy(Path.Combine(secili, e.Name), Path.Combine(hedef, e.Name), true);
         }
 
         private void CopyAll(DirectoryInfo oOriginal, DirectoryInfo oFinal)
@@ -174,5 +217,9 @@ namespace portakaldemo
             }
         }
 
+        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+
+        }
     }
 }
