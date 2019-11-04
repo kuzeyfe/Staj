@@ -16,12 +16,15 @@ namespace portakaldemo
     public partial class Form1 : Form
     {
         NotifyIcon MyIcon = new NotifyIcon();
-        static string pathA = secili;
-        static string pathB = hedef;
-        FileCompare myFileCompare = new FileCompare();
-        IEnumerable<System.IO.FileInfo> list1;
-        IEnumerable<System.IO.FileInfo> list2;
-        bool kıyasla;
+        StreamReader sr = null;
+        DateTime tarih = DateTime.Now;
+
+        //static string pathA = secili;
+        //static string pathB = hedef;
+        //FileCompare myFileCompare = new FileCompare();
+        //IEnumerable<System.IO.FileInfo> list1;
+        //IEnumerable<System.IO.FileInfo> list2;
+        //bool kıyasla;
 
         public Form1()
         {
@@ -79,14 +82,14 @@ namespace portakaldemo
 
         }
 
-        static string secili = "";
+        static string secilen = "";
         private string gercek;
 
         private void button2_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog Klasor = new FolderBrowserDialog();
             Klasor.ShowDialog();
-            secili = Klasor.SelectedPath;
+            secilen = Klasor.SelectedPath;
             gercek = Klasor.SelectedPath;
 
         }
@@ -125,7 +128,7 @@ namespace portakaldemo
             timer1.Enabled = false;
             timer1.Start();
             FileSystemWatcher degisim = new FileSystemWatcher();
-            degisim.Path = secili;
+            degisim.Path = secilen;
             degisim.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
             degisim.Filter = "*.*";
             //System.IO.DirectoryInfo dir1 = new System.IO.DirectoryInfo(secili);
@@ -142,10 +145,12 @@ namespace portakaldemo
             //kıyasla = list1.SequenceEqual(list2, myFileCompare);
 
             //if (kıyasla != true)
-            if (degisim.EnableRaisingEvents!=true)
-            {
+            //if (degisim.EnableRaisingEvents!=true)
+            //{
+            
+
                 //Array.ForEach(Directory.GetFiles(hedef, "*.*", SearchOption.AllDirectories), File.Delete);
-                this.CopyAll(new DirectoryInfo(secili), new DirectoryInfo(hedef));
+                //this.CopyAll(new DirectoryInfo(secili), new DirectoryInfo(hedef));
                 //if (!File.Exists(loglar))
 
                 //{
@@ -158,68 +163,104 @@ namespace portakaldemo
                 //    File.AppendAllText(loglar, "portakaldemo.zip dosyası:" + DateTime.Now.ToString() + ": " + "tarihinde oluşturulmuştur.\n");
                 //}
                 
-            }
+            //}
 
         }
 
         private void degisim_Renamed(object sender, RenamedEventArgs e)
         {
-            File.AppendAllText(loglar, $"{e.Name} - dosyası:" + DateTime.Now.ToString() + ": " + "tarihinde adı değişti.\n");
-            File.AppendText(loglar).Close();
-            MyIcon.ShowBalloonTip(1, "Uyarı", $"{e.Name} dosyasının adı değişti!", ToolTipIcon.Info);
-            File.Copy(Path.Combine(secili, e.Name), Path.Combine(hedef, e.Name), true);
+            try
+            {
+                
+                MyIcon.ShowBalloonTip(1, "Uyarı", $"{e.Name} dosyasının adı değişti!", ToolTipIcon.Info);
+                File.Copy(Path.Combine(secilen, e.Name), Path.Combine(hedef, e.Name + tarih));
+            }
+            finally
+            {
+                if (sr != null)
+                {
+                    File.AppendAllText(loglar, $"{e.Name} - dosyası:" + DateTime.Now.ToString() + ": " + "tarihinde adı değişti.\n");
+                    sr.Close();
+                }
+            }
+            
         }
 
         private void degisim_Deleted(object sender, FileSystemEventArgs e)
         {
-            File.AppendAllText(loglar, $"{e.Name} - dosyası:" + DateTime.Now.ToString() + ": " + "tarihinde silindi.\n");
-            File.AppendText(loglar).Close();
-            MyIcon.ShowBalloonTip(1, "Uyarıl", $"{e.Name} dosysı silindi!", ToolTipIcon.Info);
+            try
+            {
+                
+                 MyIcon.ShowBalloonTip(1, "Uyarıl", $"{e.Name} dosysı silindi!", ToolTipIcon.Info);
+            }
+            finally
+            {
+                if (sr != null)
+                {
+                    File.AppendAllText(loglar, $"{e.Name} - dosyası:" + DateTime.Now.ToString() + ": " + "tarihinde silindi.\n");
+                    sr.Close();
+                }
+            }
         }
 
         private void degisim_Changed(object sender, FileSystemEventArgs e)
         {
-            File.AppendAllText(loglar, $"{e.Name} - dosyası:" + DateTime.Now.ToString() + ": " + "tarihinde değişti.\n");
-            File.AppendText(loglar).Close();
-            MyIcon.ShowBalloonTip(1, "Uyarı", $"{e.Name} dosyasında yeni bir değişiklik var!", ToolTipIcon.Info);
-            File.Copy(Path.Combine(secili, e.Name), Path.Combine(hedef, e.Name), true);
+             try
+                {
+                   
+                    MyIcon.ShowBalloonTip(1, "Uyarı", $"{e.Name} dosyasında yeni bir değişiklik var!", ToolTipIcon.Info);
+                    File.Copy(Path.Combine(secilen, e.Name), Path.Combine(hedef, e.Name + tarih));
+             }
+             finally
+             {
+                if (sr != null)
+                {
+                    File.AppendAllText(loglar, $"{e.Name} - dosyası:" + DateTime.Now.ToString() + ": " + "tarihinde değişti.\n");
+                    sr.Close();
+                }
+             }
         }
 
         private void degisim_Created(object sender, FileSystemEventArgs e)
         {
-            File.AppendAllText(loglar, $"{e.Name} - dosyası:" + DateTime.Now.ToString() + ": " + "tarihinde oluşturuldu.\n");
-            File.AppendText(loglar).Close();
-            MyIcon.ShowBalloonTip(1, "Uyarı", $"{e.Name} adında bir dosya oluştu!", ToolTipIcon.Info);
-            File.Copy(Path.Combine(secili, e.Name), Path.Combine(hedef, e.Name), true);
+             try
+                {
+                   
+                   MyIcon.ShowBalloonTip(1, "Uyarı", $"{e.Name} adında bir dosya oluştu!", ToolTipIcon.Info);
+                   File.Copy(Path.Combine(secilen, e.Name), Path.Combine(hedef, e.Name + tarih));
+                }
+             finally
+             {
+                if (sr != null)
+                {
+                    File.AppendAllText(loglar, $"{e.Name} - dosyası:" + DateTime.Now.ToString() + ": " + "tarihinde oluşturuldu.\n");
+                    sr.Close();
+                }
+             }
         }
 
-        private void CopyAll(DirectoryInfo oOriginal, DirectoryInfo oFinal)
-        {
-            foreach (DirectoryInfo oFolder in oOriginal.GetDirectories())
-                this.CopyAll(oFolder, oFinal.CreateSubdirectory(oFolder.Name));
+        //private void CopyAll(DirectoryInfo oOriginal, DirectoryInfo oFinal)
+        //{
+        //    foreach (DirectoryInfo oFolder in oOriginal.GetDirectories())
+        //        this.CopyAll(oFolder, oFinal.CreateSubdirectory(oFolder.Name));
 
-            foreach (FileInfo oFile in oOriginal.GetFiles())
-                oFile.CopyTo(oFinal.FullName + @"\" + oFile.Name, true);
-        }
-        class FileCompare : System.Collections.Generic.IEqualityComparer<System.IO.FileInfo>
-        {
-            public FileCompare() { }
+        //    foreach (FileInfo oFile in oOriginal.GetFiles())
+        //        oFile.CopyTo(oFinal.FullName + @"\" + oFile.Name, true);
+        //}
+        //class FileCompare : System.Collections.Generic.IEqualityComparer<System.IO.FileInfo>
+        //{
+        //    public FileCompare() { }
 
-            public bool Equals(System.IO.FileInfo f1, System.IO.FileInfo f2)
-            {
-                return (f1.Name == f2.Name &&
-                        f1.Length == f2.Length);
-            }
-            public int GetHashCode(System.IO.FileInfo fi)
-            {
-                string s = $"{fi.Name}{fi.Length}";
-                return s.GetHashCode();
-            }
-        }
-
-        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-
-        }
+        //    public bool Equals(System.IO.FileInfo f1, System.IO.FileInfo f2)
+        //    {
+        //        return (f1.Name == f2.Name &&
+        //                f1.Length == f2.Length);
+        //    }
+        //    public int GetHashCode(System.IO.FileInfo fi)
+        //    {
+        //        string s = $"{fi.Name}{fi.Length}";
+        //        return s.GetHashCode();
+        //    }
+        //}
     }
 }
