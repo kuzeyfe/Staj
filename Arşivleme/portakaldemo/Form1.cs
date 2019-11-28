@@ -17,8 +17,7 @@ namespace portakaldemo
     public partial class Form1 : Form
     {
         NotifyIcon MyIcon = new NotifyIcon();
-        StreamReader sr = null;
-        StreamWriter sr2 = null;
+        FileStream fs = new FileStream(loglar, FileMode.OpenOrCreate);
 
         public Form1()
         {
@@ -110,13 +109,6 @@ namespace portakaldemo
         }
         private void timer1_Tick(object sender, EventArgs e)
         {
-            using (var md5 = MD5.Create())
-            {
-                using (var stream = File.OpenRead(hedef))
-                {
-                   
-                }
-            }
             timer1.Interval = 5000;
             timer1.Enabled = false;
             timer1.Start();
@@ -142,89 +134,42 @@ namespace portakaldemo
         }
 
         private void degisim_Renamed(object sender, RenamedEventArgs e)
-        {          
-            try
-            {
-                string mFile = DateTime.Now.ToString("MM-dd-yy HH-mm-ss=") + e.Name;
-                if (File.Exists(mFile) == false)
-                {
-                    File.Copy(Path.Combine(secilen, e.Name), Path.Combine(hedef, mFile));
-                    //this.Copy(new DirectoryInfo(secilen), new DirectoryInfo(hedef));
-                }
-                File.AppendAllText(loglar, $"{e.Name} - dosyası:" + DateTime.Now.ToString() + ": " + "tarihinde adı değişti.\n");
-                MyIcon.ShowBalloonTip(1, "Uyarı", $"{e.Name} dosyasının adı değişti!", ToolTipIcon.Info);
-            }
-            finally
-            {
-                if (sr != null)
-                {
-                    sr.Close();
-                    sr2.Close();
-                    this.Close();
-                }
-            }  
-        }
+        {
 
+            string mFile = DateTime.Now.ToString("MM-dd-yy HH-mm-ss-") + e.Name;
+            File.Copy(Path.Combine(secilen, e.Name), Path.Combine(hedef, mFile), true);
+            MyIcon.ShowBalloonTip(1, "Uyarı", $"{e.Name} dosyasının adı değişti!", ToolTipIcon.Info);
+            File.WriteAllText(loglar, $"{e.Name} - dosyası:" + DateTime.Now.ToString() + ": " + "tarihinde adı değişti.\n");
+
+            fs.Close();
+        }
         private void degisim_Deleted(object sender, FileSystemEventArgs e)
         {
-            try
-            {
-                File.AppendAllText(loglar, $"{e.Name} - dosyası:" + DateTime.Now.ToString() + ": " + "tarihinde silindi.\n");
-                MyIcon.ShowBalloonTip(1, "Uyarı", $"{e.Name} dosysı silindi!", ToolTipIcon.Info);
-            }
-            finally
-            {
-                if (sr != null)
-                {
-                    sr.Close();
-                    sr2.Close();
-                    this.Close();
-                }
-            }
+
+            MyIcon.ShowBalloonTip(1, "Uyarı", $"{e.Name} dosysı silindi!", ToolTipIcon.Info);
+            File.AppendAllText(loglar, $"{e.Name} - dosyası:" + DateTime.Now.ToString() + ": " + "tarihinde silindi.\n");
+
+            fs.Close();
         }
         private void degisim_Changed(object sender, FileSystemEventArgs e)
         {
-             try
-                {
-                string mFile = DateTime.Now.ToFileTime() + e.Name;
-                if (File.Exists(mFile) == false)
-                {
-                    File.Copy(Path.Combine(secilen, e.Name), Path.Combine(hedef, DateTime.Now.ToFileTime() + e.Name));
-                }
-                File.AppendAllText(loglar, $"{e.Name} - dosyası:" + DateTime.Now.ToString() + ": " + "tarihinde içeriği değişti.\n");
-                MyIcon.ShowBalloonTip(1, "Uyarı", $"{e.Name} dosyasında yeni bir değişiklik var!", ToolTipIcon.Info);
-                
-                }
-             finally
-             {
-                if (sr != null)
-                {
-                    sr.Close();
-                    sr2.Close();
-                    this.Close();
-                }
-             }
+            string mFile = DateTime.Now.ToString("MM-dd-yy HH-mm-ss-") + e.Name;
+            File.Copy(Path.Combine(secilen, e.Name), Path.Combine(hedef, mFile), true);
+            MyIcon.ShowBalloonTip(1, "Uyarı", $"{e.Name} dosyasında yeni bir değişiklik var!", ToolTipIcon.Info);
+            File.AppendAllText(loglar, $"{e.Name} - dosyası:" + DateTime.Now.ToString() + ": " + "tarihinde içeriği değişti.\n");
+
+            fs.Close();
         }
         private void degisim_Created(object sender, FileSystemEventArgs e)
         {
-             try
-                {
-                if (File.Exists(DateTime.Now.ToFileTime() + e.Name) != true)
-                {
-                    File.Copy(Path.Combine(secilen, e.Name), Path.Combine(hedef, DateTime.Now.ToString("yyyyMMddHHmmssffff") + e.Name));
-                    File.AppendAllText(loglar, $"{e.Name} - dosyası:" + DateTime.Now.ToString() + ": " + "tarihinde oluşturuldu.\n");
-                }
-                MyIcon.ShowBalloonTip(1, "Uyarı", $"{e.Name} adında bir dosya oluştu!", ToolTipIcon.Info);
-                }
-             finally
-             {
-                if (sr != null)
-                {
-                    sr.Close();
-                    sr2.Close();
-                    this.Close();
-                }
-             }
+            
+            string mFile = DateTime.Now.ToString("MM-dd-yy HH-mm-ss-") + e.Name;
+            File.Copy(Path.Combine(secilen, e.Name), Path.Combine(hedef, mFile),true);
+            MyIcon.ShowBalloonTip(1, "Uyarı", $"{e.Name} adında bir dosya oluştu!", ToolTipIcon.Info);
+            File.AppendAllText(loglar, $"{e.Name} - dosyası:" + DateTime.Now.ToString() + ": " + "tarihinde oluşturuldu.\n");
+
+            fs.Close();
+ 
         }
     }
 }
